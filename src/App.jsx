@@ -12,6 +12,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: colors.amber[500],
+      light: colors.amber[300]
     },
     secondary: {
       main: colors.grey[900]

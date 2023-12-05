@@ -40,13 +40,10 @@ function MainCard({
         ...sx,
       }}
     >
-      {/* card header and action */}
       {title && <CardHeader sx={headerSX} title={darkTitle ? <Typography variant="h3">{title}</Typography> : title} action={secondary} />}
 
-      {/* content & header divider */}
       {title && <Divider />}
 
-      {/* card content */}
       {content && (
         <CardContent sx={contentSX} className={contentClass}>
           {children}

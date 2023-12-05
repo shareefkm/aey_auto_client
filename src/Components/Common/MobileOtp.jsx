@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, Grid, TextField, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-function MobileOtp({confirmationResult,setIsOtp}) {
+function MobileOtp({confirmationResult, setIsOtp, userStatus, setExistUser}) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [remainingTime, setRemainingTime] = useState(60); 
 
+  const navigate = useNavigate()
+
   const otpFields = Array.from({ length: 6 }, (_, index) => useRef(null));
 
-  // console.log(confirmationResult);
   const handleOtpChange = (value, index, e) => {
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -25,12 +27,16 @@ function MobileOtp({confirmationResult,setIsOtp}) {
   function onOTPVerify(){
       const formattedOTP = otp.join("")
       confirmationResult.confirm(formattedOTP).then(async(res)=>{
-      console.log(res + "success enter otp");
       setIsOtp(false)
-
+      if (userStatus) {
+        navigate('/')
+      }else{
+        navigate('/register')
+      }
     }).catch((err)=>{
       console.log(err);
     })
+    setExistUser(null)
   }
   useEffect(() => {
     const timer = setInterval(() => {

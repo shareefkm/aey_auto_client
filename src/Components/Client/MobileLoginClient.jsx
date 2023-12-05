@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Stack,
-  Box,
-  Button,
-} from "@mui/material";
+import { Stack, Box, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
@@ -13,17 +9,18 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import MobileOtp from "../Common/MobileOtp";
 import { PHONE_REGEX } from "../../Regex/Regex";
 import { auth } from "../../config/config";
+import UserAxios from "../../Axios/UserAxios";
 
 function MobileLoginClient() {
   const [number, setNumber] = useState("");
   const [validNumber, setValidNumber] = useState(false);
   const [isOtp, setIsOtp] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState({});
-
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const [existUser,setExistUser] = useState(null)
 
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   function onCaptchVerify() {
     if (!window.recaptchaVerifier) {
@@ -39,19 +36,39 @@ function MobileLoginClient() {
     }
   }
 
-  function onSignup() {
-    onCaptchVerify();
-    const appVerifier = window.recaptchaVerifier;
-    const formatNum = "+" + number;
-    signInWithPhoneNumber(auth, formatNum, appVerifier)
-      .then((confirmationResult) => {
-        setConfirmationResult(confirmationResult);
-        setIsOtp(true);
-        console.log("otp sended", confirmationResult);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  async function onSignup() {
+    try {
+      const response = await UserAxios.post("/mobilelogin", {number});
+      if (response) {
+        onCaptchVerify();
+        const appVerifier = window.recaptchaVerifier;
+        const formatNum = "+" + number;
+        signInWithPhoneNumber(auth, formatNum, appVerifier)
+          .then((confirmationResult) => {
+            setConfirmationResult(confirmationResult);
+            setIsOtp(true);
+            setExistUser(true)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        onCaptchVerify();
+        const appVerifier = window.recaptchaVerifier;
+        const formatNum = "+" + number;
+        signInWithPhoneNumber(auth, formatNum, appVerifier)
+          .then((confirmationResult) => {
+            setConfirmationResult(confirmationResult);
+            setIsOtp(true);
+            setExistUser(false)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
   }
 
   useEffect(() => {
@@ -67,7 +84,12 @@ function MobileLoginClient() {
     <>
       <div id="recaptcha-container"></div>
       {isOtp ? (
-        <MobileOtp confirmationResult={confirmationResult} setIsOtp={setIsOtp} />
+        <MobileOtp
+          setExistUser={setExistUser}
+          userStatus={existUser}
+          confirmationResult={confirmationResult}
+          setIsOtp={setIsOtp}
+        />
       ) : (
         <Box
           sx={{

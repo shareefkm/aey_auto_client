@@ -17,11 +17,16 @@ import { useState } from "react";
 import ElectricRickshawIcon from "@mui/icons-material/ElectricRickshaw";
 import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
 import { useNavigate } from "react-router-dom";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 function Navbar({ value }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [toggleOpen, setToggleOpen] = useState(false);
+
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery((theme) => theme.breakpoints.between('sm', 'md'));
+  const isLargeScreen = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   const navigate = useNavigate();
   const handleClick = (event) => {
@@ -134,12 +139,13 @@ function Navbar({ value }) {
               "&:hover, &:focus": {
                 backgroundColor: "black",
               },
-              width: "50px",
-              // position: "fixed",
+              width:"50px",
+              height : "40px",
+              position: "absolute",
               ml:'auto',
               top: 0,
               right: 0,
-              // mr: "0.5rem",
+              mr: "0.5rem",
               mt: "0.5rem",
             }}
           >
@@ -152,7 +158,7 @@ function Navbar({ value }) {
           >
             <Stack
               direction="column"
-              sx={{ alignItems: "flex-start", backgroundColor:'black' }}
+              sx={{ alignItems: "flex-start", backgroundColor:'black', mt:6}}
             >
               <Button color="inherit">Features</Button>
               <Button color="inherit">Pricing</Button>
