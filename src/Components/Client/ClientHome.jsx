@@ -1,22 +1,29 @@
-import React from 'react'
-import { Box } from "@mui/material";
-import Banner from '../Common/Banner'
-import Cards from '../Common/Cards'
+import React from "react";
+import { Box, Stack, Typography } from "@mui/material";
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import Banner from "../Common/Banner";
+import Cards from "../Common/Cards";
+import './style.css'
 
 function ClientHome() {
   return (
-    <div>
-        <div>
-      <Banner/>
-        </div>
-        <Box  display='flex' justifyContent='space-between' pt={2}>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-      <Cards/>
-        </Box>
-    </div>
-  )
+    <>
+      <Box>
+        <Banner />
+      </Box>
+      <Box>
+        <Typography variant="h4" component="div" color = 'primary.main' fontWeight="bold">
+          Auto Nearest You
+        </Typography>
+      </Box>
+      <Box display="flex" pt={2} className="card-container">
+      <Cards btnIcon={<HowToRegIcon />}/>
+      <Cards btnIcon={<HowToRegIcon/>}/>
+      <Cards btnIcon={<HowToRegIcon/>}/>
+      <Cards btnIcon={<HowToRegIcon/>}/>
+    </Box>
+    </>
+  );
 }
 
-export default ClientHome
+export default ClientHome;

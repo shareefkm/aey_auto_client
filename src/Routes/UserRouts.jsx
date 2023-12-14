@@ -11,7 +11,7 @@ function UserRouts() {
     <div>
       <Routes>
         <Route path='/' element = {<Home/>}/>
-        <Route path='/roll' element = {<Roll/>}/>
+        <Route path='/role' element = {<Roll/>}/>
         <Route path='/login' element = {<MobileLoginPageClient/>}/>
         <Route path='/register' element = {<RegPage/>}/>
       </Routes>

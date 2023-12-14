@@ -6,10 +6,11 @@ export const userSlice = createSlice({
         _id: null,
         user:null,
         token:null,
+        blocked:null
     },
     reducers:{
         setCredentials:(state,action)=>{
-            const {user, token, _id} = action.payload
+            const {user, token, _id, blocked} = action.payload
             state.user = user
             state.token = token
             state._id = _id

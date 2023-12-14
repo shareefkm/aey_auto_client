@@ -9,10 +9,9 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import LoginIcon from '@mui/icons-material/Login';
 import { useNavigate } from "react-router-dom";
 
-function Cards({image , altText, roll, content, path}) {
+function Cards({image , altText, roll, content, path, btnIcon}) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -38,7 +37,7 @@ function Cards({image , altText, roll, content, path}) {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button onClick={()=>navigate(path)}><LoginIcon color="primary" sx={{ fontSize: "2rem" }}/></Button>
+            <Button onClick={()=>navigate(path)} sx={{ color:"primary" , size:"2rem"}}> {btnIcon}  </Button>
           </CardActions>
           </Box>
         </Card>

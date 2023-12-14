@@ -17,16 +17,22 @@ import { useState } from "react";
 import ElectricRickshawIcon from "@mui/icons-material/ElectricRickshaw";
 import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
 import { useNavigate } from "react-router-dom";
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import  { useDispatch, useSelector } from 'react-redux'
 
 function Navbar({ value }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [toggleOpen, setToggleOpen] = useState(false);
 
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const isMediumScreen = useMediaQuery((theme) => theme.breakpoints.between('sm', 'md'));
-  const isLargeScreen = useMediaQuery((theme) => theme.breakpoints.up('lg'));
+  const token = useSelector((state)=>state.user.token)
+  console.log(token);
+
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isMediumScreen = useMediaQuery((theme) =>
+    theme.breakpoints.between("sm", "md")
+  );
+  const isLargeScreen = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   const navigate = useNavigate();
   const handleClick = (event) => {
@@ -38,11 +44,15 @@ function Navbar({ value }) {
   const openToggle = () => {
     setToggleOpen(!toggleOpen);
   };
+  const Logout = ()=>{
+    useDispatch(userLogout())
+    navigate("/")
+  }
   return (
     <AppBar position="static" color="secondary">
       <Toolbar sx={{ display: { xs: "none", md: "flex" } }}>
-        <IconButton edge="start" color="inherit" aria-label="logo">
-          <ElectricRickshawIcon color="primary" sx={{ fontSize: "2.25rem" }} />
+          <IconButton edge="start" aria-label="logo" >
+          <img style={{ width: '2.25rem', height: '2.25rem' }} src="/logo/auto-rickshaw.svg" alt="Logo" />
         </IconButton>
         <Typography
           variant="h6"
@@ -75,16 +85,23 @@ function Navbar({ value }) {
           >
             Resources
           </Button>
-          <Button color="inherit">Login</Button>
-          {value === "home" && (
+          <Button color="inherit" onClick={() => navigate("/role")}>Login</Button>
+          {token ? (
             <Button
-              onClick={() => navigate("/roll")}
-              variant="contained"
-              sx={{ borderRadius: "50px" }}
-            >
-              Sign up
-            </Button>
-          )}
+            onClick={Logout}
+            variant="contained"
+            sx={{ borderRadius: "50px" }}
+          >
+            Logout
+          </Button>
+          ): ( 
+          <Button
+          onClick={() => navigate("/role")}
+          variant="contained"
+          sx={{ borderRadius: "50px" }}
+        >
+          Sign up
+        </Button>)}
         </Stack>
         <Menu
           id="resources-menu"
@@ -111,8 +128,8 @@ function Navbar({ value }) {
       <Toolbar
         sx={{ display: { xs: "inline-flex", md: "none", height: "50px" } }}
       >
-        <IconButton edge="start" aria-label="logo">
-          <ElectricRickshawIcon color="primary" sx={{ fontSize: "2rem" }} />
+        <IconButton edge="start" aria-label="logo" >
+          <img style={{ width: '2.25rem', height: '2.25rem' }} src="/logo/auto-rickshaw.svg" alt="Logo" />
         </IconButton>
         <Typography
           variant="h6"
@@ -139,10 +156,10 @@ function Navbar({ value }) {
               "&:hover, &:focus": {
                 backgroundColor: "black",
               },
-              width:"50px",
-              height : "40px",
+              width: "50px",
+              height: "40px",
               position: "absolute",
-              ml:'auto',
+              ml: "auto",
               top: 0,
               right: 0,
               mr: "0.5rem",
@@ -158,7 +175,7 @@ function Navbar({ value }) {
           >
             <Stack
               direction="column"
-              sx={{ alignItems: "flex-start", backgroundColor:'black', mt:6}}
+              sx={{ alignItems: "flex-start", backgroundColor: "black", mt: 6 }}
             >
               <Button color="inherit">Features</Button>
               <Button color="inherit">Pricing</Button>
@@ -174,9 +191,11 @@ function Navbar({ value }) {
               >
                 Resources
               </Button>
-              <Button color="inherit">Login</Button>
+              <Button color="inherit" onClick={() => navigate("/role")}>
+                Login
+              </Button>
               <Button
-                onClick={() => navigate("/roll")}
+                onClick={() => navigate("/role")}
                 variant="contained"
                 sx={{ borderRadius: "50px" }}
               >

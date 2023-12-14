@@ -2,11 +2,19 @@ import React, { useState, useRef, useEffect } from "react";
 import { Box, Grid, TextField, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function MobileOtp({confirmationResult, setIsOtp, userStatus, setExistUser}) {
+function MobileOtp({
+  confirmationResult,
+  setIsOtp,
+  userStatus,
+  setExistUser,
+  driverStatus,
+  setExistDriver,
+  role,
+}) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
-  const [remainingTime, setRemainingTime] = useState(60); 
+  const [remainingTime, setRemainingTime] = useState(60);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const otpFields = Array.from({ length: 6 }, (_, index) => useRef(null));
 
@@ -24,26 +32,38 @@ function MobileOtp({confirmationResult, setIsOtp, userStatus, setExistUser}) {
     }
   };
 
-  function onOTPVerify(){
-      const formattedOTP = otp.join("")
-      confirmationResult.confirm(formattedOTP).then(async(res)=>{
-      setIsOtp(false)
-      if (userStatus) {
-        navigate('/')
-      }else{
-        navigate('/register')
-      }
-    }).catch((err)=>{
-      console.log(err);
-    })
-    setExistUser(null)
+  function onOTPVerify() {
+    const formattedOTP = otp.join("");
+    confirmationResult
+      .confirm(formattedOTP)
+      .then(async (res) => {
+        setIsOtp(false);
+        if (role === "User") {
+          if (userStatus) {
+            navigate("/");
+          } else {
+            navigate("/register");
+          }
+          setExistUser(null);
+        }else{
+          if (driverStatus) {
+            navigate("/driver");
+          } else {
+            navigate("/driver/register");
+          }
+          setExistDriver(null)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   useEffect(() => {
     const timer = setInterval(() => {
       setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
-    return () => clearInterval(timer); 
-  }, []); 
+    return () => clearInterval(timer);
+  }, []);
 
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
@@ -97,7 +117,12 @@ function MobileOtp({confirmationResult, setIsOtp, userStatus, setExistUser}) {
           ))}
         </Grid>
       </Box>
-      <Button onClick={onOTPVerify} color="secondary" variant="contained" sx={{ marginTop: "16px" }}>
+      <Button
+        onClick={onOTPVerify}
+        color="secondary"
+        variant="contained"
+        sx={{ marginTop: "16px" }}
+      >
         Submit
       </Button>
       <Typography
@@ -105,7 +130,7 @@ function MobileOtp({confirmationResult, setIsOtp, userStatus, setExistUser}) {
         color="white"
         sx={{ fontSize: "0.7rem", fontWeight: "normal", marginTop: "16px" }}
       >
-       Resend OTP in {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+        Resend OTP in {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
       </Typography>
     </Box>
   );

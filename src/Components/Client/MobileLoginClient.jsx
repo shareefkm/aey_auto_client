@@ -85,6 +85,7 @@ function MobileLoginClient() {
       <div id="recaptcha-container"></div>
       {isOtp ? (
         <MobileOtp
+          role={'User'}
           setExistUser={setExistUser}
           userStatus={existUser}
           confirmationResult={confirmationResult}
